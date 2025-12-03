@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>成都3天2晚行程助手（高享受条件）</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f7fb;
+      color: #222;
+    }
+    header {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #6aa8ff, #8bd6ff);
+      color: #fff;
+    }
+    header h1 {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+    }
+    header p {
+      margin: 0;
+      font-size: 14px;
+    }
+    main {
+      max-width: 960px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+    }
+    .section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #e7f1ff;
+      color: #3564c5;
+    }
+    .hint {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .source-highlight {
+      color: darkred;   /* 深红色 */
+      font-weight: 600; /* 可选：稍微加粗 */
+    }
+    .pref-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .pref-option {
+      padding: 6px 10px;
+      font-size: 13px;
+      border-radius: 999px;
+      border: 1px solid #d0d8f0;
+      background: #f8faff;
+      cursor: pointer;
+      user-select: none;
+    }
+    .pref-option.selected {
+      background: #2f88ff;
+      color: #fff;
+      border-color: #2f88ff;
+    }
+    .small-success {
+      font-size: 13px;
+      color: #256000;
+      margin-top: 6px;
+      display: none;
+    }
+    .routes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .route-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e1e5f0;
+      padding: 12px 14px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: default;
+    }
+    .route-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    }
+    .route-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .route-name {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .match {
+      font-size: 12px;
+      color: #3564c5;
+    }
+    .route-meta {
+      font-size: 13px;
+      color: #555;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .route-details {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+    .select-row {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .select-row label {
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .progress {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #3564c5;
+    }
+    .btn-primary {
+      background: #2f88ff;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .final-msg {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #256000;
+      display: none;
+    }
+    .note {
+      font-size: 12px;
+      color: #777;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>你的成都 3 天 2 晚行程助手 ✨</h1>
+  <p>根据你的喜好，为你推荐最适合的 4 条线路。整个过程大约 4–6 分钟，请根据自己的真实想法选择。
+  </p>
+</header>
+
+<main>
+  <!-- 第 1 页：信息来源 + 偏好 -->
+  <div id="page1">
+    <!-- 0. 说明 -->
+    <section class="section">
+      <div class="section-title">
+        <span>说明</span>
+      </div>
+      <p class="hint">您正在使用生成式AI辅助您计划到成都 3 天 2 晚旅游的线路，AI根据输入的指令推荐了4 条线路，点击下一步将展示推荐的线路。 请依次阅读并在最后做出选择。</p>
+    </section>
+
+    <!-- 0. 信息来源-可信度 -->
+    <section class="section">
+      <div class="section-title">
+        <span>信息来源</span>
+      </div>
+    <p class="hint">
+      <span class="source-highlight">综合算法推荐。</span>
+    </p>
+    </section>
+
+    <!-- 1. 偏好（营造轻微控制感 + 愉悦） -->
+    <section class="section">
+      <div class="section-title">
+        <span>先告诉AI一个你更在意的点</span>
+        <span class="badge">可选</span>
+      </div>
+      <p class="hint">这会帮助你定制自己的旅程。</p>
+      <div class="pref-options" id="prefOptions">
+        <div class="pref-option" data-value="food">更在意地道美食</div>
+        <div class="pref-option" data-value="spots">更在意景点丰富度</div>
+        <div class="pref-option" data-value="relax">更在意轻松不累</div>
+        <div class="pref-option" data-value="photo">更在意拍照打卡感</div>
+      </div>
+      <div class="small-success" id="prefSuccess">已根据你的偏好“微调”推荐 😊</div>
+    </section>
+
+    <!-- 下一页按钮 -->
+    <section class="section">
+      <p class="hint">请先阅读本页说明和信息来源，然后点击“下一页”进入AI推荐线路浏览和确认。</p>
+      <button class="btn-primary" id="toPage2Btn">下一页</button>
+    </section>
+  </div>
+
+  <!-- 第 2 页：浏览推荐线路 + 确认最终线路 + 开始回答问卷 -->
+  <div id="page2" style="display:none;">
+    <!-- 2. 浏览 4 条线路 -->
+    <section class="section">
+      <div class="section-title">
+        <span>浏览推荐线路</span>
+      </div>
+      <p class="hint">
+      请查看线路后选择。信息来源：
+      <span class="source-highlight">综合算法推荐。</span>
+    </p>
+
+
+      <div class="routes-container">
+        <!-- 路线 A -->
+        <article class="route-card">
+          <div class="route-header">
+            <div class="route-name">路线 A · 经典城市+美食体验</div>
+          </div>
+          <div class="route-meta">
+            <span>总价约：¥1800 / 人</span>
+            <span>节奏：中等偏轻松</span>
+            <span>餐饮：本地川菜为主</span>
+            <span>步行强度：★★☆</span>
+          </div>
+          <div class="route-details">
+            <strong>Day 1：</strong>人民公园 &bull; 宽窄巷子 &bull; 锦里古街，自由闲逛+盖章打卡，晚餐安排本地火锅。<br/>
+            <strong>Day 2：</strong>都江堰景区一日游，中午在老街品尝小吃，傍晚返回城区休息。<br/>
+            <strong>Day 3：</strong>文殊院早茶体验 &bull; 春熙路购物，自由返程。
+          </div>
+          <div class="select-row">
+            <label>
+              <input type="radio" name="route" value="A">
+              选择这条作为我的行程
+            </label>
+          </div>
+        </article>
+
+        <!-- 路线 B -->
+        <article class="route-card">
+          <div class="route-header">
+            <div class="route-name">路线 B · 熊猫+自然风光</div>
+          </div>
+          <div class="route-meta">
+            <span>总价约：¥1900 / 人</span>
+            <span>节奏：略紧凑</span>
+            <span>餐饮：川菜+当地小吃</span>
+            <span>步行强度：★★★</span>
+          </div>
+          <div class="route-details">
+            <strong>Day 1：</strong>成都大熊猫繁育研究基地，上午观赏熊猫；下午前往太古里闲逛。<br/>
+            <strong>Day 2：</strong>青城山一日徒步，体验道教文化和山林清幽。<br/>
+            <strong>Day 3：</strong>宽窄巷子早午餐 &bull; 市区休闲咖啡馆，下午返程。
+          </div>
+          <div class="select-row">
+            <label>
+              <input type="radio" name="route" value="B">
+              选择这条作为我的行程
+            </label>
+          </div>
+        </article>
+
+        <!-- 路线 C -->
+        <article class="route-card">
+          <div class="route-header">
+            <div class="route-name">路线 C · 小众街区+咖啡漫步</div>
+          </div>
+          <div class="route-meta">
+            <span>总价约：¥1750 / 人</span>
+            <span>节奏：轻松</span>
+            <span>餐饮：川味+融合创意餐</span>
+            <span>步行强度：★★☆</span>
+          </div>
+          <div class="route-details">
+            <strong>Day 1：</strong>玉林路街区 &bull; 小酒馆 &bull; 创意市集，夜间漫步。<br/>
+            <strong>Day 2：</strong>东郊记忆文创园，下午在独立咖啡馆发呆写明信片。<br/>
+            <strong>Day 3：</strong>人民公园喝盖碗茶，体验本地人日常，随后返程。
+          </div>
+          <div class="select-row">
+            <label>
+              <input type="radio" name="route" value="C">
+              选择这条作为我的行程
+            </label>
+          </div>
+        </article>
+
+        <!-- 路线 D -->
+        <article class="route-card">
+          <div class="route-header">
+            <div class="route-name">路线 D · 美食深度体验</div>
+          </div>
+          <div class="route-meta">
+            <span>总价约：¥1850 / 人</span>
+            <span>节奏：中等</span>
+            <span>餐饮：美食比重高</span>
+            <span>步行强度：★★☆</span>
+          </div>
+          <div class="route-details">
+            <strong>Day 1：</strong>春熙路小吃打卡 &bull; 火锅店排队+夜宵串串。<br/>
+            <strong>Day 2：</strong>本地人推荐早茶+苍蝇馆子 &bull; 下午甜品与咖啡时间。<br/>
+            <strong>Day 3：</strong>锦里/宽窄巷子再次回访喜欢的餐厅，午后返程。
+          </div>
+          <div class="select-row">
+            <label>
+              <input type="radio" name="route" value="D">
+              选择这条作为我的行程
+            </label>
+          </div>
+        </article>
+      </div>
+
+      <div class="progress" id="selectionHint">请选择一条最符合你期待的线路。</div>
+      <button class="btn-primary" id="confirmBtn" disabled>确认我的最终线路</button>
+      <div class="final-msg" id="finalMsg">
+        ✅ 已确认，你的成都 3 天 2 晚行程已完成！
+      </div>
+    </section>
+
+    <!-- 开始回答问卷按钮 -->
+    <section class="section">
+      <p class="hint">请在确认最终线路后，点击下方按钮进入问卷页面。</p>
+      <button class="btn-primary" id="startSurveyBtn" disabled>开始回答问卷</button>
+    </section>
+  </div>
+</main>
+
+<script>
+  // 页面切换
+  const page1 = document.getElementById('page1');
+  const page2 = document.getElementById('page2');
+  const toPage2Btn = document.getElementById('toPage2Btn');
+
+  toPage2Btn.addEventListener('click', () => {
+    page1.style.display = 'none';
+    page2.style.display = 'block';
+  });
+
+  // 偏好选择（营造轻微控制感+愉悦感）
+  const prefOptions = document.querySelectorAll('.pref-option');
+  const prefSuccess = document.getElementById('prefSuccess');
+  prefOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      prefOptions.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      prefSuccess.style.display = 'block';
+    });
+  });
+
+  // 线路选择与确认
+  const radios = document.querySelectorAll('input[name="route"]');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const selectionHint = document.getElementById('selectionHint');
+  const finalMsg = document.getElementById('finalMsg');
+  const startSurveyBtn = document.getElementById('startSurveyBtn');
+
+  radios.forEach(r => {
+    r.addEventListener('change', () => {
+      confirmBtn.disabled = false;
+      const chosen = document.querySelector('input[name="route"]:checked').value;
+      selectionHint.textContent = '你当前选择的是【路线 ' + chosen + '】。如有需要，可以切换后再点击确认。';
+    });
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    const chosen = document.querySelector('input[name="route"]:checked');
+    if (!chosen) return;
+    confirmBtn.disabled = true;
+    finalMsg.style.display = 'block';
+    selectionHint.textContent = '你已确认【路线 ' + chosen.value + '】为你的最终行程。';
+    startSurveyBtn.disabled = false;
+    // 在这里记录最终选择，比如发送到服务器
+  });
+
+  // 问卷跳转
+  startSurveyBtn.addEventListener('click', () => {
+    window.location.href = 'https://v.wjx.cn/vm/thBsdxf.aspx#';
+  });
+</script>
+</body>
+</html>
